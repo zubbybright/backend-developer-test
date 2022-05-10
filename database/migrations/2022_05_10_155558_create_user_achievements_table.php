@@ -17,6 +17,7 @@ class CreateUserAchievementsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('achievement_id')->constrained();
+            $table->tinyInteger('next_achievement_id');
             $table->timestamps();
         });
     }

@@ -66,13 +66,15 @@ class User extends Authenticatable
     }
 
     //Achievements the user has
-    public function userAchievements(){
+    public function userAchievements()
+    {
         return $this->hasMany(UserAchievement::class);
     }
 
-     //Badges the user has
-     public function userBages(){
+    //Badges the user has
+    public function userBages()
+    {
         return $this->hasMany(UserBadge::class);
     }
-    
+
 }
