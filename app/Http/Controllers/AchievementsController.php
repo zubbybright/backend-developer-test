@@ -20,22 +20,7 @@ class AchievementsController extends Controller
         ]);
     }
 
-    private function getNextAchievements()
-    {   
-        //get current unlocked achievements
-        $nextAchievements = [];
-        
-        $unlockedAchievements = auth()->user()->userAchievements()->get()->map(function($a) use ( $nextAchievements){
-            //compare achievement types
-            $currentAchievement = Achievement::where('id', $a->achievement_id)->first();
-            $nextAchievement = Achievement::where('id', $a->next_achievement_id)->first();
-            if($currentAchievement->type === $nextAchievement->type){
-                $nextAchievements[] =  $nextAchievement;
-            }
-        });
-        
-        return $nextAchievements;
-    }
+
 
     private function getUnlockedAchievementNames(){
         $unlockedAchievementsNames = [];

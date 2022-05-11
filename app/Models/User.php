@@ -71,10 +71,30 @@ class User extends Authenticatable
         return $this->hasMany(UserAchievement::class);
     }
 
+    public function getNextAchievements()
+    {
+        //get current unlocked achievements
+        $nextAchievements = [];
+
+        $unlockedAchievements = $this->userAchievements()->where('next_achievement_unlocked', false)->get();
+
+        foreach ($unlockedAchievements as $a) {
+            if ($a->id !== $a->achievement_id) {
+                //compare achievement types
+                $currentAchievement = Achievement::where('id', $a->achievement_id)->first();
+                $nextAchievement = Achievement::where('id', $a->next_achievement_id)->first();
+                if ($currentAchievement->type === $nextAchievement->type) {
+                    $nextAchievements[] =  $nextAchievement;
+                }
+            }
+        }
+
+        return $nextAchievements;
+    }
+
     //Badges the user has
     public function userBages()
     {
         return $this->hasMany(UserBadge::class);
     }
-
 }
