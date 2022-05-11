@@ -22,7 +22,21 @@ class UserAchievementFactory extends Factory
         return [
             'user_id' => $this->faker->randomElement(array(1,2,3,4,5)),
             'achievement_id' => $this->faker->randomElement(array(1,2,3,4,5,6,7,8,9,10)),
-            'next_achievement_id' =>  $this->faker->randomElement(array(1,2,3,4,5,6,7,8,9,10)),
+            'next_achievement_id' => function (array $attributes) {
+                //check type of achievement
+                $achievement = Achievement::find($attributes['achievement_id']);
+                $nextAchievement = $achievement->id + 1;
+                $checkNextAchievement = Achievement::find($nextAchievement);
+                
+                if($checkNextAchievement !== null){
+                    if($checkNextAchievement->type === $achievement->type){
+                        return $nextAchievement;
+                    }else{
+                        return $achievement->id; 
+                    }
+                };
+                return $achievement->id;
+            },
             'next_achievement_unlocked' => $this->faker->randomElement(array(true,false)),
         ];
     }

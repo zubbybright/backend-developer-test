@@ -126,4 +126,17 @@ class User extends Authenticatable
 
         return $nextUnlockableBadgeCount - $achievementCount;
     }
+
+    public function getUnlockedAchievementNames(){
+        $unlockedAchievementsNames = [];
+
+        $userAchievements = $this->userAchievements()->get();
+        
+        foreach($userAchievements as $a){
+            $achivementName = Achievement::where('id', $a->achievement_id)->first()->name;
+            $unlockedAchievementsNames[] = $achivementName;
+        }
+
+        return $unlockedAchievementsNames;
+    }
 }

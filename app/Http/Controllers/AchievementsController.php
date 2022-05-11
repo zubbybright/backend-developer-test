@@ -12,7 +12,7 @@ class AchievementsController extends Controller
     {   
     
         return response()->json([
-            'unlocked_achievements' => $this->getUnlockedAchievementNames($user),
+            'unlocked_achievements' => $user->getUnlockedAchievementNames(),
             'next_available_achievements' => $user->getNextAchievements(),
             'current_badge' => $user->getCurrentBadge(),
             'next_badge' => $user->getNextBadge(),
@@ -22,16 +22,5 @@ class AchievementsController extends Controller
 
 
 
-    private function getUnlockedAchievementNames($user){
-        $unlockedAchievementsNames = [];
 
-        $userAchievements = $user->userAchievements()->get();
-        
-        foreach($userAchievements as $a){
-            $achivementName = Achievement::where('id', $a->id)->first()->name;
-            $unlockedAchievementsNames[] = $achivementName;
-        }
-
-        return $unlockedAchievementsNames;
-    }
 }

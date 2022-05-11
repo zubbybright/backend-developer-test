@@ -27,11 +27,11 @@ class DatabaseSeeder extends Seeder
             BadgeSeeder::class,
         ]);
 
-        UserBadge::factory()
+        UserAchievement::factory()
             ->count(5)
             ->create();
 
-        UserAchievement::factory()
+        UserBadge::factory()
             ->count(5)
             ->create();
     }

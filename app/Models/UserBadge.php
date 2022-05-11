@@ -18,4 +18,5 @@ class UserBadge extends Model
     public function badge(){
         return $this->belongsTo(Badge::class);
     }
+    
 }
