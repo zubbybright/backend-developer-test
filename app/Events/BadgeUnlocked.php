@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -23,7 +22,7 @@ class BadgeUnlocked
      *
      * @return void
      */
-    public function __construct(string $badge_name, User $user)
+    public function __construct(string $badge_name, $user)
     {
         $this->badge_name = $badge_name;
         $this->user = $user;

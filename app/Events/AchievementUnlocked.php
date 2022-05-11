@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -22,7 +21,7 @@ class AchievementUnlocked
      *
      * @return void
      */
-    public function __construct(string $achievement_name, User $user)
+    public function __construct(string $achievement_name, $user)
     {
         $this->achievement_name = $achievement_name;
         $this->user = $user;

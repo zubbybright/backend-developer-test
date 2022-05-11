@@ -10,12 +10,13 @@ class AchievementsController extends Controller
 {
     public function index(User $user)
     {   
+    
         return response()->json([
             'unlocked_achievements' => $this->getUnlockedAchievementNames($user),
-            'next_available_achievements' => User::find($user)->getNextAchievements(),
-            'current_badge' => User::find($user)->getCurrentBadge(),
-            'next_badge' => User::find($user)->getNextBadge(),
-            'remaining_to_unlock_next_badge' => User::find($user)->remainingToUnlockNextBadge()
+            'next_available_achievements' => $user->getNextAchievements(),
+            'current_badge' => $user->getCurrentBadge(),
+            'next_badge' => $user->getNextBadge(),
+            'remaining_to_unlock_next_badge' => $user->remainingToUnlockNextBadge()
         ]);
     }
 
@@ -24,7 +25,7 @@ class AchievementsController extends Controller
     private function getUnlockedAchievementNames($user){
         $unlockedAchievementsNames = [];
 
-        $userAchievements = User::find($user)->userAchievements()->get();
+        $userAchievements = $user->userAchievements()->get();
         
         foreach($userAchievements as $a){
             $achivementName = Achievement::where('id', $a->id)->first()->name;
