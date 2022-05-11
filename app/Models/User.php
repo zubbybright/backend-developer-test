@@ -93,8 +93,37 @@ class User extends Authenticatable
     }
 
     //Badges the user has
-    public function userBages()
+    public function userBadges()
     {
         return $this->hasMany(UserBadge::class);
+    }
+
+    public function getCurrentBadge(){
+        $latestBadge = $this->userBadges()->latest()->first();
+        
+        if($latestBadge === null){
+            $beginnerBadge = $this->userBadges()->create([
+                'user_id' => $this->id,
+                'badge_id' => 1,
+                'next_badge_id' => 2,
+            ]);
+            return $beginnerBadge->badge->name;
+        }
+        return $latestBadge->badge->name;
+    }
+
+    public function getNextBadge(){
+        $latestBadge = $this->userBadges()->latest()->first();
+        $nextBadge = Badge::where('id',$latestBadge->next_badge_id)->first();
+
+        return $nextBadge->name;
+    }
+
+    public function remainingToUnlockNextBadge(){
+        $achievementCount = $this->userAchievements()->count();
+        $latestBadge = $this->userBadges()->latest()->first();
+        $nextUnlockableBadgeCount = Badge::where('id',$latestBadge->next_badge_id)->first()->achievement_count;
+
+        return $nextUnlockableBadgeCount - $achievementCount;
     }
 }

@@ -7,7 +7,7 @@ use App\Events\BadgeUnlocked;
 use App\Events\CommentWritten;
 use App\Models\Achievement;
 use App\Models\Badge;
-use App\Models\UserAchievement;
+use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -29,10 +29,9 @@ class UserCommentedListener
      * @param  object  $event
      * @return void
      */
-    public function handle(CommentWritten $event)
+    public function handle(CommentWritten $event, User $user)
     {
-        //get the user
-        $user = auth()->user();
+
         // get the number of comments the user has
         $numberOfComments = $user->comments()->get()->count();
         //get user's next achievements
@@ -51,7 +50,7 @@ class UserCommentedListener
                 //fire achievement unlocked event
                 event(new AchievementUnlocked($nextCommentWrittenAchievement->name, $user));
 
-                $nextAchievementId = $this->getNextAchievementId();
+                $nextAchievementId = $this->getNextAchievementId($user);
                 //unlock achievement
                 $user->userAchievements()->create([
                     'user_id' => $user->id,
@@ -84,10 +83,10 @@ class UserCommentedListener
         }
     }
 
-    private function getNextAchievementId()
+    private function getNextAchievementId($user)
     {
         //get next achievement id 
-        $currentAchievement = auth()->user()->userAchievements()->latest()->first();
+        $currentAchievement = $user->userAchievements()->latest()->first();
 
         $nextAchievement = Achievement::where('id', ($currentAchievement->achievement_id + 1))->first();
 

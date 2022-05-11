@@ -4,6 +4,10 @@ namespace App\Listeners;
 
 use App\Events\AchievementUnlocked;
 use App\Events\BadgeUnlocked;
+use App\Events\LessonWatched;
+use App\Models\User;
+use App\Models\Badge;
+use App\Models\Achievement;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -25,10 +29,9 @@ class UserWatchedListener
      * @param  object  $event
      * @return void
      */
-    public function handle($event)
+    public function handle(LessonWatched $event, User $user)
     {
-        //get the user
-        $user = auth()->user();
+
         // get the number of watched lessons the user has
         $numberOfWatchedLessons = $user->watched()->get()->count();
         //get user's next achievements
@@ -48,7 +51,7 @@ class UserWatchedListener
                 //fire achievement unlocked event
                 event(new AchievementUnlocked($nextLessonWatchedAchievement->name, $user));
 
-                $nextAchievementId = $this->getNextAchievementId();
+                $nextAchievementId = $this->getNextAchievementId($user);
                 //unlock achievement
                 $user->userAchievements()->create([
                     'user_id' => $user->id,
@@ -81,10 +84,10 @@ class UserWatchedListener
         }
     }
 
-    private function getNextAchievementId()
+    private function getNextAchievementId($user)
     {
         //get next achievement id 
-        $currentAchievement = auth()->user()->userAchievements()->latest()->first();
+        $currentAchievement = $user->userAchievements()->latest()->first();
 
         $nextAchievement = Achievement::where('id', ($currentAchievement->achievement_id + 1))->first();
 
